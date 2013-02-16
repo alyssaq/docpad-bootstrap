@@ -10,16 +10,13 @@
 		"bootstrap",
 		"twitter bootstrap"
 	],
-	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
+	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me) and Alyssa Quek",
 	"maintainers": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+		"Alyssa Quek"
 	],
 	"contributors": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+		"Alyssa Quek"
 	],
-	"bugs": {
-		"url": "https://github.com/docpad/twitter-bootstrap.docpad/issues"
-	},
 	"repository" : {
 		"type" : "git",
 		"url" : "http://github.com/docpad/twitter-bootstrap.docpad.git"
@@ -42,5 +39,8 @@
 	"devDependencies": {
 		"docpad-plugin-livereload": "2.x"
 	},
-	"main": "node_modules/docpad/bin/docpad-server"
+	"main": "node_modules/docpad/bin/docpad-server",
+	"scripts": {
+   	"start": "node_modules/docpad/bin/docpad-server"
+	}
 }

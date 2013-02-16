@@ -35,34 +35,53 @@
 
 	<!-- Styles -->
 	<%- @getBlock('styles').add(["/vendor/twitter-bootstrap/css/bootstrap.css","/vendor/twitter-bootstrap/css/bootstrap-responsive.css","/styles/style.css"]).toHTML() %>
+
 </head>
 <body>
-	<!-- Markup -->
-	<div class="navbar navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<a class="brand" href="/">Welcome</a>
-				<ul class="nav">
+	 <div class="container-narrow">
+
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          		
 					<% for document in @getCollection('pages').toJSON(): %>
 						<li typeof="sioc:Page" about="<%= document.url %>" class="<%= 'active'  if @document.url is document.url %>">
 							<a href="<%= document.url %>" property="dc:title"><%= document.title %></a>
 						</li>
 					<% end %>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<div class="container">
-		<section id="content" class="content">
+			
+        </ul>
+        <h3 class="muted">Project name</h3>
+      </div>
+
+      <hr>
+
+      <div class="jumbotron">
+        <h1>Super awesome marketing speak!</h1>
+        <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+        <a class="btn btn-large btn-success" href="#">Sign up today</a>
+      </div>
+
+      <hr>
+
+      <div class="row-fluid marketing">
+        <section id="content" class="content">
 			<%- @content %>
-		</section>
+			</section>
+      </div>
+
+      <hr>
+
 		<footer>
 			<p>&copy; Company 2012</p>
 			<p style="float:right;">
 				This website was last updated at <%= @site.date.toISOString() %>
 			</p>
 		</footer>
-	</div><!-- /container -->
+
+    </div> <!-- /container -->
+
 
 	<!-- Scripts -->
 	<%- @getBlock('scripts').add(["/vendor/jquery.js","/vendor/log.js","/vendor/modernizr.js","/scripts/script.js"]).toHTML() %>

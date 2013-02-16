@@ -30,7 +30,7 @@ docpadConfig = {
 
 			# The website keywords (for SEO) separated by commas
 			keywords: """
-				place, your, website, keywoards, here, keep, them, related, to, the, content, of, your, website
+				place, your, website, keywords, here, keep, them, related, to, the, content, of, your, website
 				"""
 
 			# The website author's name
@@ -39,6 +39,8 @@ docpadConfig = {
 			# The website author's email
 			email: "your@email.com"
 
+			#links
+			links: ["/pages/hello"]
 
 
 		# -----------------------------
@@ -65,6 +67,8 @@ docpadConfig = {
 			# Merge the document keywords with the site keywords
 			@site.keywords.concat(@document.keywords or []).join(', ')
 
+		getLinks: ->
+			@site.links
 
 	# =================================
 	# Collections
@@ -78,6 +82,9 @@ docpadConfig = {
 		# This one, will fetch in all documents that have the tag "post" specified in their meta data
 		posts: (database) ->
 			database.findAllLive({tags: $has: ['post']}, [date:-1])
+
+		navmenus: (database) ->
+			database.findAllLive({tags: $has: 'navmenu'}, [pageOrder:1])
 
 
 	# =================================

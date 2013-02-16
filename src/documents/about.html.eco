@@ -1,0 +1,12 @@
+---
+layout: 'default'
+title: 'About'
+tags: ['navmenu']
+pageOrder: 3
+---
+
+<div class="hero-unit">
+	<p>
+		About
+	</p>
+</div>

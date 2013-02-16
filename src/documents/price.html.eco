@@ -1,0 +1,12 @@
+---
+layout: 'default'
+title: 'Price'
+tags: ['navmenu']
+pageOrder: 2
+---
+
+<div class="hero-unit">
+	<p>
+		Price
+	</p>
+</div>

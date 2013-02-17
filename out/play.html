@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <!-- Our site title and description -->
-    <title>About | Your Website</title>
+    <title>Play | Your Website</title>
     <meta name="description" content="When your website appears in search results in say Google, the text here will be shown underneath your website's title." />
     <meta name="keywords" content="place, your, website, keywords, here, keep, them, related, to, the, content, of, your, website" />
     <meta name="author" content="Your Name" />
@@ -51,11 +51,11 @@
                     <a href="/price" property="dc:title">Price</a>
                 </li>
             
-                <li typeof="sioc:Page" about="/about" class="active">
+                <li typeof="sioc:Page" about="/about" class="">
                     <a href="/about" property="dc:title">About</a>
                 </li>
             
-                <li typeof="sioc:Page" about="/play" class="">
+                <li typeof="sioc:Page" about="/play" class="active">
                     <a href="/play" property="dc:title">Play</a>
                 </li>
             
@@ -68,11 +68,30 @@
 
       <div class="row-fluid marketing">
         <section id="content" class="content">
-            <div class="hero-unit">
-    <p>
-        About
-    </p>
-</div>
+            <section id="wrapper">
+  <h1>Scribble demo</h1>
+  <aside id="message"></aside>
+
+  <article>
+    <section class="block">
+      <h4>Drawing tools:</h4>
+      <p>
+        <button id="btnForeG" class="btn btn-primary" type="button">Foreground</button>
+        <button id="btnBackG" class="btn btn-inverse" type="button">Background</button>
+      </p>
+      <div>
+          Line width:
+          <input type="text" id="btnLinewidth" value="1"></input> pixels
+      </div>
+      <input class="btn btn-info btn-small" type="submit" id="btnClear" value="Clear"></input>
+    </section>
+    <section class="block">
+      <h4>Canvas area:</h4>
+      <canvas id="drawingCanvas" width="400" height="400" class="block"
+              onSelectStart="this.style.cursor='crosshair'; return false;"></canvas>
+    </section>
+  </article>
+</section>
             </section>
       </div>
 

@@ -30,3 +30,10 @@ table tbody th {
   font-size: 21px;
   padding: 14px 24px;
 }
+#drawingCanvas {
+  border: 1px dotted Black;
+  cursor: crosshair;
+}
+#btnLinewidth {
+  max-width: 50px;
+}

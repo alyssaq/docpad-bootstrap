@@ -1,0 +1,31 @@
+--- yaml
+layout: 'default'
+title: 'Play'
+tags: ['navmenu']
+pageOrder: 4
+---
+<section id="wrapper">
+  <h1>Scribble demo</h1>
+  <aside id="message"></aside>
+
+  <article>
+    <section class="block">
+      <h4>Drawing tools:</h4>
+      <p>
+        <button id="btnForeG" class="btn btn-primary" type="button">Foreground</button>
+        <button id="btnBackG" class="btn btn-inverse" type="button">Background</button>
+      </p>
+      <div>
+          Line width:
+          <input type="text" id="btnLinewidth" value="1"></input> pixels
+      </div>
+      <input class="btn btn-info btn-small" type="submit" id="btnClear" value="Clear"></input>
+    </section>
+    <section class="block">
+      <h4>Canvas area:</h4>
+      <canvas id="drawingCanvas" width="400" height="400" class="block"
+              onSelectStart="this.style.cursor='crosshair'; return false;"></canvas>
+    </section>
+  </article>
+</section>
+

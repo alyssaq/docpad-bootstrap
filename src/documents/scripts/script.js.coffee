@@ -16,11 +16,37 @@ getPosition = (mouseEvent, element) ->
     y = mouseEvent.clientY + document.body.scrollTop + document.documentElement.scrollTop
   X: x - element.offsetLeft, Y: y - element.offsetTop
 
+canvasDrop = (context) ->
+  (e) ->
+    e = e || window.event; # get window.event if e argument missing (in IE)  
+    dragEvent e
+    files = e.dataTransfer.files
+    info  = ""
+    formData = new FormData()
+    dropBoxElem = e.currentTarget
+    for file, i in files       
+      info += 'Name: '+file.name+'<br/>Size: '+file.size+' bytes<br/>'
+      formData.append 'file', file
+      reader = new FileReader()
+      reader.onload = (event) ->
+        image       = new Image();
+        image.src   = event.target.result
+        image.width = 250 # a fake resize
+        context.drawImage(image, 69, 50)
+      reader.readAsDataURL file
+    $("#imageInfo").html info
+    false
+
 initialize = ->
   # get references to the canvas element as well as the 2D drawing context
   element             = document.getElementById("drawingCanvas")
   context             = element.getContext("2d")
   context.strokeStyle = App.Globals.foreGcolour
+
+  element.addEventListener 'dragenter', dragEvent, false
+  element.addEventListener 'dragover' , dragEvent, false
+  element.addEventListener 'drop'     , canvasDrop(context), false
+
   # start drawing when the mousedown event fires, and attach handlers to 
   # draw a line to wherever the mouse moves to
   $("#drawingCanvas").mousedown (mouseEvent) ->
@@ -53,7 +79,6 @@ initialize = ->
   $("#btnLinewidth").change (event) ->
     context.lineWidth = event.target.value unless isNaN(event.target.value)
 
-
 # draws a line to the x and y coordinates of the mouse event inside
 # the specified element using the specified context
 drawLine   = (mouseEvent, element, context) ->
@@ -78,3 +103,37 @@ $(document).ready ->
     $("article").hide()
   else
     initialize()
+
+#Drag and drop events
+dragEvent = (e) ->
+  e.stopPropagation()
+  e.preventDefault()
+
+drop = (e) ->
+  e = e || window.event; # get window.event if e argument missing (in IE)  
+  dragEvent e
+  files = e.dataTransfer.files
+  info  = ""
+  formData = new FormData()
+  dropBoxElem = e.currentTarget
+  for file, i in files       
+    info += 'Name: '+file.name+'<br/>Size: '+file.size+' bytes<br/>'
+    formData.append 'file', file
+    reader = new FileReader()
+    reader.onload = (event) ->
+      image   = new Image();
+      image.src   = event.target.result
+      image.width = 250 # a fake resize
+      dropBoxElem.appendChild image
+    reader.readAsDataURL file
+  e.currentTarget.innerHTML = info
+  false
+
+$(document).ready ->
+  if window.FileReader
+    dropBoxElem = document.getElementById("drop")
+    dropBoxElem.addEventListener 'dragenter', dragEvent, false
+    dropBoxElem.addEventListener 'dragover' , dragEvent, false
+    dropBoxElem.addEventListener 'drop'     , drop, false
+  else
+    $("#drop").html "Please use a HTML5 browser to drop and drop images"

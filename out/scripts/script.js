@@ -1,5 +1,5 @@
 (function() {
-  var App, drawLine, finishDrawing, getPosition, initialize;
+  var App, canvasDrop, dragEvent, drawLine, drop, finishDrawing, getPosition, initialize;
 
   App = App || {
     Globals: {
@@ -25,11 +25,42 @@
     };
   };
 
+  canvasDrop = function(context) {
+    return function(e) {
+      var dropBoxElem, file, files, formData, i, info, reader, _i, _len;
+      e = e || window.event;
+      dragEvent(e);
+      files = e.dataTransfer.files;
+      info = "";
+      formData = new FormData();
+      dropBoxElem = e.currentTarget;
+      for (i = _i = 0, _len = files.length; _i < _len; i = ++_i) {
+        file = files[i];
+        info += 'Name: ' + file.name + '<br/>Size: ' + file.size + ' bytes<br/>';
+        formData.append('file', file);
+        reader = new FileReader();
+        reader.onload = function(event) {
+          var image;
+          image = new Image();
+          image.src = event.target.result;
+          image.width = 250;
+          return context.drawImage(image, 69, 50);
+        };
+        reader.readAsDataURL(file);
+      }
+      $("#imageInfo").html(info);
+      return false;
+    };
+  };
+
   initialize = function() {
     var context, element;
     element = document.getElementById("drawingCanvas");
     context = element.getContext("2d");
     context.strokeStyle = App.Globals.foreGcolour;
+    element.addEventListener('dragenter', dragEvent, false);
+    element.addEventListener('dragover', dragEvent, false);
+    element.addEventListener('drop', canvasDrop(context), false);
     $("#drawingCanvas").mousedown(function(mouseEvent) {
       var position;
       position = getPosition(mouseEvent, element);
@@ -81,6 +112,49 @@
       return $("article").hide();
     } else {
       return initialize();
+    }
+  });
+
+  dragEvent = function(e) {
+    e.stopPropagation();
+    return e.preventDefault();
+  };
+
+  drop = function(e) {
+    var dropBoxElem, file, files, formData, i, info, reader, _i, _len;
+    e = e || window.event;
+    dragEvent(e);
+    files = e.dataTransfer.files;
+    info = "";
+    formData = new FormData();
+    dropBoxElem = e.currentTarget;
+    for (i = _i = 0, _len = files.length; _i < _len; i = ++_i) {
+      file = files[i];
+      info += 'Name: ' + file.name + '<br/>Size: ' + file.size + ' bytes<br/>';
+      formData.append('file', file);
+      reader = new FileReader();
+      reader.onload = function(event) {
+        var image;
+        image = new Image();
+        image.src = event.target.result;
+        image.width = 250;
+        return dropBoxElem.appendChild(image);
+      };
+      reader.readAsDataURL(file);
+    }
+    e.currentTarget.innerHTML = info;
+    return false;
+  };
+
+  $(document).ready(function() {
+    var dropBoxElem;
+    if (window.FileReader) {
+      dropBoxElem = document.getElementById("drop");
+      dropBoxElem.addEventListener('dragenter', dragEvent, false);
+      dropBoxElem.addEventListener('dragover', dragEvent, false);
+      return dropBoxElem.addEventListener('drop', drop, false);
+    } else {
+      return $("#drop").html("Please use a HTML5 browser to drop and drop images");
     }
   });
 

@@ -15,6 +15,10 @@ pageOrder: 4
         <button id="btnForeG" class="btn btn-primary" type="button">Foreground</button>
         <button id="btnBackG" class="btn btn-inverse" type="button">Background</button>
       </p>
+      <p>
+        <button class="btn" onclick="toImage()">Snapshot</button>
+        <button class="btn" onclick="toDesktop()">Save to Desktop</button>
+      </p>
       <div>
           Line width:
           <input type="text" id="btnLinewidth" value="1"></input> pixels
@@ -26,8 +30,21 @@ pageOrder: 4
       <div id="imageInfo"></div>
       <canvas id="drawingCanvas" width="400" height="400" class="block"
               onSelectStart="this.style.cursor='crosshair'; return false;"></canvas>
+
+      <image id="theimage"></image>
     </section>
   </article>
 </section>
 
 <div id="drop">Drag File in Here</div>
+
+<script>
+  function toImage(){
+    var canvas = document.getElementById("drawingCanvas");
+    document.getElementById("theimage").src = canvas.toDataURL();
+  }
+  function toDesktop(){
+    var canvas = document.getElementById("drawingCanvas");
+    Canvas2Image.saveAsPNG(canvas);
+  }
+</script>

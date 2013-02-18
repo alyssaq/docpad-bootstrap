@@ -16,9 +16,9 @@ getPosition = (mouseEvent, element) ->
     y = mouseEvent.clientY + document.body.scrollTop + document.documentElement.scrollTop
   X: x - element.offsetLeft, Y: y - element.offsetTop
 
-canvasDrop = (context) ->
+canvasDrop2 = (context) ->
   (e) ->
-    e = e || window.event; # get window.event if e argument missing (in IE)  
+    e = e || window.event # get window.event if e argument missing (in IE)  
     dragEvent e
     files = e.dataTransfer.files
     info  = ""
@@ -28,14 +28,44 @@ canvasDrop = (context) ->
       info += 'Name: '+file.name+'<br/>Size: '+file.size+' bytes<br/>'
       formData.append 'file', file
       reader = new FileReader()
+      document.getElementById("drawingCanvas").width = 2000
       reader.onload = (event) ->
         image       = new Image();
         image.src   = event.target.result
-        image.width = 250 # a fake resize
-        context.drawImage(image, 69, 50)
+        #image.width = 250 # a fake resize
+        context.drawImage(image, 0, 0)
       reader.readAsDataURL file
     $("#imageInfo").html info
     false
+
+canvasDrop = (context) ->
+  (e) ->
+    e = e || window.event
+    dragEvent e
+    files = e.dataTransfer.files
+    info  = ""
+    for file, i in files
+      info += 'Name: '+file.name+'<br/>Size: '+file.size+' bytes<br/>'
+      image = new Image()
+      image.onload = ((image, i) ->
+        (e) ->
+          # Size adjustment 
+          canvas  = document.getElementById("drawingCanvas")
+          canvas.width = image.width
+          canvas.height = image.height
+          context = canvas.getContext("2d")
+          context.drawImage image, 0, 0
+  #(canvas.height - image.height) / 2, 2, image.width, image.height
+          window.URL.revokeObjectURL @src
+      )(image, i)
+      image.src = window.URL.createObjectURL file
+      context.drawImage(image, 0, 0)
+      image = null
+    $("#imageInfo").html info
+    false
+
+
+
 
 initialize = ->
   # get references to the canvas element as well as the 2D drawing context
@@ -68,6 +98,7 @@ initialize = ->
     currentWidth      = context.lineWidth
     element.width     = element.width
     context.lineWidth = currentWidth
+    $("#imageInfo").html ''
   
   #Change the line colour depending on fore/background
   $("#btnForeG").click ->
@@ -137,3 +168,8 @@ $(document).ready ->
     dropBoxElem.addEventListener 'drop'     , drop, false
   else
     $("#drop").html "Please use a HTML5 browser to drop and drop images"
+
+to_image = ->
+  console.log "drawing"
+  canvas = document.getElementById("drawingCanvas")
+  document.getElementById("theimage").src = canvas.toDataURL();

@@ -73,6 +73,6 @@
 
 
 	<!-- Scripts -->
-	<%- @getBlock('scripts').add(["/vendor/jquery.js","/vendor/log.js","/vendor/modernizr.js","/scripts/script.js"]).toHTML() %>
+	<%- @getBlock('scripts').add(["/vendor/jquery.js","/vendor/log.js","/vendor/modernizr.js","/scripts/script.js", "/scripts/canvas2image.js"]).toHTML() %>
 </body>
 </html>

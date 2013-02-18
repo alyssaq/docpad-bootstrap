@@ -1,5 +1,5 @@
 (function() {
-  var App, canvasDrop, dragEvent, drawLine, drop, finishDrawing, getPosition, initialize;
+  var App, canvasDrop, canvasDrop2, dragEvent, drawLine, drop, finishDrawing, getPosition, initialize, to_image;
 
   App = App || {
     Globals: {
@@ -25,7 +25,7 @@
     };
   };
 
-  canvasDrop = function(context) {
+  canvasDrop2 = function(context) {
     return function(e) {
       var dropBoxElem, file, files, formData, i, info, reader, _i, _len;
       e = e || window.event;
@@ -39,14 +39,45 @@
         info += 'Name: ' + file.name + '<br/>Size: ' + file.size + ' bytes<br/>';
         formData.append('file', file);
         reader = new FileReader();
+        document.getElementById("drawingCanvas").width = 2000;
         reader.onload = function(event) {
           var image;
           image = new Image();
           image.src = event.target.result;
-          image.width = 250;
-          return context.drawImage(image, 69, 50);
+          return context.drawImage(image, 0, 0);
         };
         reader.readAsDataURL(file);
+      }
+      $("#imageInfo").html(info);
+      return false;
+    };
+  };
+
+  canvasDrop = function(context) {
+    return function(e) {
+      var file, files, i, image, info, _i, _len;
+      e = e || window.event;
+      dragEvent(e);
+      files = e.dataTransfer.files;
+      info = "";
+      for (i = _i = 0, _len = files.length; _i < _len; i = ++_i) {
+        file = files[i];
+        info += 'Name: ' + file.name + '<br/>Size: ' + file.size + ' bytes<br/>';
+        image = new Image();
+        image.onload = (function(image, i) {
+          return function(e) {
+            var canvas;
+            canvas = document.getElementById("drawingCanvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0);
+            return window.URL.revokeObjectURL(this.src);
+          };
+        })(image, i);
+        image.src = window.URL.createObjectURL(file);
+        context.drawImage(image, 0, 0);
+        image = null;
       }
       $("#imageInfo").html(info);
       return false;
@@ -78,7 +109,8 @@
       var currentWidth;
       currentWidth = context.lineWidth;
       element.width = element.width;
-      return context.lineWidth = currentWidth;
+      context.lineWidth = currentWidth;
+      return $("#imageInfo").html('');
     });
     $("#btnForeG").click(function() {
       return context.strokeStyle = App.Globals.foreGcolour;
@@ -157,5 +189,12 @@
       return $("#drop").html("Please use a HTML5 browser to drop and drop images");
     }
   });
+
+  to_image = function() {
+    var canvas;
+    console.log("drawing");
+    canvas = document.getElementById("drawingCanvas");
+    return document.getElementById("theimage").src = canvas.toDataURL();
+  };
 
 }).call(this);

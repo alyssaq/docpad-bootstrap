@@ -145,20 +145,23 @@
       return resCtx.restore();
     });
     $("#btnForeG").click(function() {
+      context.globalCompositeOperation = "source-over";
       context.strokeStyle = App.Globals.foreGcolour;
       return context2.strokeStyle = "white";
     });
     $("#btnBackG").click(function() {
+      context.globalCompositeOperation = "source-over";
       context.strokeStyle = App.Globals.backGcolour;
       return context2.strokeStyle = "black";
     });
     $("#btnEraser").click(function() {
       context.globalCompositeOperation = "destination-out";
-      context.strokeStyle = "rgba(255,255,255,1.0)";
+      context.strokeStyle = "rgba(0,0,0,1.0)";
       return context2.strokeStyle = "lightgrey";
     });
     return $("#btnLinewidth").change(function(event) {
-      return context.lineWidth = $(this).val();
+      context.lineWidth = $(this).val();
+      return context2.lineWidth = $(this).val();
     });
   };
 

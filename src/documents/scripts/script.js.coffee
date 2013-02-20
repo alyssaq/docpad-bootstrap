@@ -134,19 +134,22 @@ initialize = (canvasId)->
   
   #Change the line colour depending on fore/background
   $("#btnForeG").click ->
+    context.globalCompositeOperation  = "source-over"
     context.strokeStyle  = App.Globals.foreGcolour
     context2.strokeStyle = "white"
   $("#btnBackG").click ->
+    context.globalCompositeOperation  = "source-over"
     context.strokeStyle  = App.Globals.backGcolour
     context2.strokeStyle = "black"
   $("#btnEraser").click ->
     context.globalCompositeOperation  = "destination-out"
-    context.strokeStyle               = "rgba(255,255,255,1.0)"
+    context.strokeStyle               = "rgba(0,0,0,1.0)"
     context2.strokeStyle              = "lightgrey"
 
   # change the line width
   $("#btnLinewidth").change (event) ->
     context.lineWidth = $(this).val()
+    context2.lineWidth = $(this).val()
 
 # draws a line to the x and y coordinates of the mouse event inside
 # the specified element using the specified context

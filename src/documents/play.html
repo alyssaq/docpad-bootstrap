@@ -14,6 +14,7 @@ pageOrder: 4
       <p>
         <button id="btnForeG" class="btn btn-primary" type="button">Foreground</button>
         <button id="btnBackG" class="btn btn-inverse" type="button">Background</button>
+        <button id="btnEraser" class="btn btn-warning" type="button">Erase</button>
       </p>
       <p>
         <button class="btn" onclick="toImage()">Snapshot</button>
@@ -21,30 +22,41 @@ pageOrder: 4
       </p>
       <div>
           Line width:
-          <input type="text" id="btnLinewidth" value="1"></input> pixels
+          <input type="number" id="btnLinewidth" value="5"></input> pixels
       </div>
       <input class="btn btn-info btn-small" type="submit" id="btnClear" value="Clear"></input>
     </section>
     <section class="block">
       <h4>Canvas area:</h4>
       <div id="imageInfo"></div>
+      <div id="drop"> <img style="display:none" id="dropImg" src="about:blank" alt="" /></div>
+      <!--
       <canvas id="drawingCanvas" width="400" height="400" class="block"
               onSelectStart="this.style.cursor='crosshair'; return false;"></canvas>
-
-      <image id="theimage"></image>
+      -->
+      <canvas id="resultCanvas" width="400" height="400"></canvas>
     </section>
   </article>
 </section>
 
-<div id="drop">Drag File in Here</div>
-
 <script>
   function toImage(){
-    var canvas = document.getElementById("drawingCanvas");
-    document.getElementById("theimage").src = canvas.toDataURL();
+    var canvas    = document.getElementById("canvasArea");
+    var resultCtx = document.getElementById("resultCanvas").getContext("2d")
+    resultCtx.canvas.width  = canvas.width;
+    resultCtx.canvas.height = canvas.height;
+    resultCtx.drawImage(canvas, 0, 0);
+    // set composite property
+    resultCtx.globalCompositeOperation = "destination-over";
+
+    // Fill background
+    resultCtx.fillStyle = "lightgrey";
+    resultCtx.fillRect(0, 0, canvas.width, canvas.height);
+
   }
   function toDesktop(){
-    var canvas = document.getElementById("drawingCanvas");
+    var canvas = document.getElementById("resultCanvas");
     Canvas2Image.saveAsPNG(canvas);
   }
+
 </script>

@@ -34,7 +34,7 @@
 	<![endif]-->
 
 	<!-- Styles -->
-	<%- @getBlock('styles').add(["/vendor/twitter-bootstrap/css/bootstrap.css","/vendor/twitter-bootstrap/css/bootstrap-responsive.css","/styles/style.css"]).toHTML() %>
+	<%- @getBlock('styles').add(["/vendor/twitter-bootstrap/css/cosmo.min.css","/vendor/twitter-bootstrap/css/bootstrap-responsive.css","/styles/style.css"]).toHTML() %>
 
 </head>
 <body>

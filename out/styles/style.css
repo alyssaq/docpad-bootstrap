@@ -37,16 +37,19 @@ table tbody th {
 #btnLinewidth {
   max-width: 50px;
 }
+#resultCanvas {
+  margin-top: 10px;
+  margin-left: 10px;
+}
 /* Drop box styles */
 #drop {
   border: 10px dashed #ccc;
   width: 300px;
-  min-height: 300px;
-  margin: 20px auto;
+  height: 300px;
+  float: left;
 }
 #drop.hover {
-  border: 10px;
-  dashed: #0c0;
+  border: 10px dashed #0c0;
 }
 img {
   vertical-align: top;

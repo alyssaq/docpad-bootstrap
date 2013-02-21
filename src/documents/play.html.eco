@@ -15,6 +15,7 @@ pageOrder: 4
         <button id="btnForeG" class="btn btn-info" type="button">Foreground</button>
         <button id="btnBackG" class="btn btn-warning" type="button">Background</button>
         <button id="btnEraser" class="btn btn-primary" type="button">Erase</button>
+        <button class="btn btn-inverse btn-small" type="button" id="btnClear">Clear</button>
       </p>
       <p>
          <!--<button class="btn" onclick="toImage()">Trimap Snapshot</button>-->
@@ -24,7 +25,7 @@ pageOrder: 4
           Line width:
           <input type="number" id="btnLinewidth" value="5"></input> pixels
       </div>
-      <input class="btn btn-inverse btn-small" type="submit" id="btnClear" value="Clear"></input>
+      
     </section>
     <section class="block">
 

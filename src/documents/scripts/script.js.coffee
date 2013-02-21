@@ -143,7 +143,7 @@ parseImg = (file) ->
   reader.onload = (e) ->
     image       = new Image()
     image.id    = "dropImg"
-    image.src   = event.target.result
+    image.src   = e.target.result
     image.onload = ((image) -> 
       (e) ->
         loadCanvasAndImg "drop", image
@@ -168,6 +168,7 @@ addEventHandler = (obj, evt, handler) ->
   else # Old school method
     obj['on' + evt] = handler
     
+#TODO: 21/02: Max uploadable image size is 10MB
 $(document).ready ->
   if window.File && window.FileList && window.FileReader
     addEventHandler document.getElementById("imgSelect"), "change", imgSelectHandler

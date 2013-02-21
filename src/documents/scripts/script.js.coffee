@@ -7,7 +7,9 @@ App = App || Globals: {foreGcolour: $("#btnForeG").css('backgroundColor'), backG
 
 #Events
 clearBtn = (resCtx) ->
-  $("#drop").empty()
+  $("#drop").empty().html("Or drop image here!")
+  $("#drop").width(300)
+  $("#drop").height(300)
   # remember the current line width
   $("#imageInfo").html ''
   # clear the content of the canvas 
@@ -123,6 +125,8 @@ loadCanvasAndImg = (id, img) ->
     canvas.style.cursor   = "crosshair"
     canvas.onselectstart  = () -> false # IE: disable text selection
     canvas.onmousedown    = () -> false # mozilla: disable text selection
+    canvas.ondragover     = (e) -> $id.addClass "hover"; false
+    canvas.ondragleave    = (e) -> $id.removeClass "hover"; false
     $id.append canvas
     initialize canvas
   $id.append img
@@ -130,25 +134,28 @@ loadCanvasAndImg = (id, img) ->
 stopDefault = (e) ->
   e.stopPropagation()
   e.preventDefault()
+  e.target.className = if e.type == "dragover" then "hover" else ""
 
-drop = (e) ->
+parseImg = (file) ->
+  info   = 'Name: '+file.name+'<br/>Size: '+file.size+' bytes<br/>'
+  reader = new FileReader();
+  reader.onload = (e) ->
+    image       = new Image()
+    image.id    = "dropImg"
+    image.src   = event.target.result
+    image.onload = ((image) -> 
+      (e) ->
+        loadCanvasAndImg "drop", image
+        $("#imageInfo").html info
+    )(image)
+  reader.readAsDataURL file
+
+imgSelectHandler = (e) ->
   e = e || window.event; # get window.event if e argument missing (in IE)  
   stopDefault e
-  files = e.dataTransfer.files
-  dropBoxElem = e.currentTarget
-  for file, i in files       
-    info   = 'Name: '+file.name+'<br/>Size: '+file.size+' bytes<br/>'
-    reader = new FileReader()
-    reader.onload = (event) ->
-      image       = new Image()
-      image.id    = "dropImg"
-      image.src   = event.target.result
-      image.onload = ((image) -> 
-        (e) ->
-          loadCanvasAndImg "drop", image
-          $("#imageInfo").html info
-      )(image)
-    reader.readAsDataURL file
+  files = e.target.files || e.dataTransfer.files
+  # Process image files
+  parseImg f for f in files when f.type.indexOf("image") is 0
   false
 
 # cross-browser addEventHandler()  
@@ -161,11 +168,17 @@ addEventHandler = (obj, evt, handler) ->
     obj['on' + evt] = handler
     
 $(document).ready ->
-  if window.FileReader
-    dropBoxElem = document.getElementById("drop")
-    addEventHandler dropBoxElem, 'dragenter', stopDefault
-    addEventHandler dropBoxElem, 'dragover' , stopDefault
-    addEventHandler dropBoxElem, 'dragleave', stopDefault
-    addEventHandler dropBoxElem, 'drop'     , drop
+  if window.File && window.FileList && window.FileReader
+    addEventHandler document.getElementById("imgSelect"), "change", imgSelectHandler
+
+    xhr = new XMLHttpRequest()
+    if xhr.upload
+      # file drag-drop
+      dropBoxElem = document.getElementById("drop")
+      addEventHandler dropBoxElem, 'dragover' , stopDefault
+      addEventHandler dropBoxElem, 'dragleave', stopDefault
+      addEventHandler dropBoxElem, 'drop'     , imgSelectHandler
+      dropBoxElem.style.display = "block"
+      #submitbutton.style.display = "none";
   else
     $("#imageInfo").html "Your browser does not support drag and drop of images"

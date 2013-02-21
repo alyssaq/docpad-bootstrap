@@ -91,14 +91,24 @@
       <input class="btn btn-inverse btn-small" type="submit" id="btnClear" value="Clear"></input>
     </section>
     <section class="block">
-      <!--<h4>Canvas area:</h4>-->
-      <div id="imageInfo"></div>
-      <div id="drop"></div>
-      <!--
-      <canvas id="drawingCanvas" width="400" height="400" class="block"
-              onSelectStart="this.style.cursor='crosshair'; return false;"></canvas>
-      -->
-      <canvas id="resultCanvas" width="400" height="400"></canvas>
+
+      <form id="imgUpload" action="upload.php" method="POST" enctype="multipart/form-data">
+      <fieldset form="imgUpload">
+      <legend>Please upload an image</legend>
+      <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+      <div>
+        <label for="imgSelect"><button type="button" id="btn_myFileInput">Choose image...</button></label>
+        <input type="file" accept="image/*" id="imgSelect" name="imgSelect"/>
+        <div id="imageInfo"></div>
+        <div id="drop">Or drop image here!</div>
+        <canvas id="resultCanvas" width="400" height="400"></canvas>
+      </div>
+        <!--
+        <button type="submit">Upload Files</button>
+        -->
+      </fieldset>
+      </form
+      
     </section>
   </article>
 </section>

@@ -1,5 +1,5 @@
 (function() {
-  var App, addEventHandler, clearBtn, drawLine, drawLines, drop, finishDrawings, getPosition, initialize, loadCanvasAndImg, stopDefault;
+  var App, addEventHandler, clearBtn, drawLine, drawLines, finishDrawings, getPosition, imgSelectHandler, initialize, loadCanvasAndImg, parseImg, stopDefault;
 
   App = App || {
     Globals: {
@@ -9,7 +9,9 @@
   };
 
   clearBtn = function(resCtx) {
-    $("#drop").empty();
+    $("#drop").empty().html("Or drop image here!");
+    $("#drop").width(300);
+    $("#drop").height(300);
     $("#imageInfo").html('');
     resCtx.save();
     resCtx.setTransform(1, 0, 0, 1, 0, 0);
@@ -127,6 +129,14 @@
       canvas.onmousedown = function() {
         return false;
       };
+      canvas.ondragover = function(e) {
+        $id.addClass("hover");
+        return false;
+      };
+      canvas.ondragleave = function(e) {
+        $id.removeClass("hover");
+        return false;
+      };
       $id.append(canvas);
       initialize(canvas);
     }
@@ -135,32 +145,39 @@
 
   stopDefault = function(e) {
     e.stopPropagation();
-    return e.preventDefault();
+    e.preventDefault();
+    return e.target.className = e.type === "dragover" ? "hover" : "";
   };
 
-  drop = function(e) {
-    var dropBoxElem, file, files, i, info, reader, _i, _len;
+  parseImg = function(file) {
+    var info, reader;
+    info = 'Name: ' + file.name + '<br/>Size: ' + file.size + ' bytes<br/>';
+    reader = new FileReader();
+    reader.onload = function(e) {
+      var image;
+      image = new Image();
+      image.id = "dropImg";
+      image.src = event.target.result;
+      return image.onload = (function(image) {
+        return function(e) {
+          loadCanvasAndImg("drop", image);
+          return $("#imageInfo").html(info);
+        };
+      })(image);
+    };
+    return reader.readAsDataURL(file);
+  };
+
+  imgSelectHandler = function(e) {
+    var f, files, _i, _len;
     e = e || window.event;
     stopDefault(e);
-    files = e.dataTransfer.files;
-    dropBoxElem = e.currentTarget;
-    for (i = _i = 0, _len = files.length; _i < _len; i = ++_i) {
-      file = files[i];
-      info = 'Name: ' + file.name + '<br/>Size: ' + file.size + ' bytes<br/>';
-      reader = new FileReader();
-      reader.onload = function(event) {
-        var image;
-        image = new Image();
-        image.id = "dropImg";
-        image.src = event.target.result;
-        return image.onload = (function(image) {
-          return function(e) {
-            loadCanvasAndImg("drop", image);
-            return $("#imageInfo").html(info);
-          };
-        })(image);
-      };
-      reader.readAsDataURL(file);
+    files = e.target.files || e.dataTransfer.files;
+    for (_i = 0, _len = files.length; _i < _len; _i++) {
+      f = files[_i];
+      if (f.type.indexOf("image") === 0) {
+        parseImg(f);
+      }
     }
     return false;
   };
@@ -176,13 +193,17 @@
   };
 
   $(document).ready(function() {
-    var dropBoxElem;
-    if (window.FileReader) {
-      dropBoxElem = document.getElementById("drop");
-      addEventHandler(dropBoxElem, 'dragenter', stopDefault);
-      addEventHandler(dropBoxElem, 'dragover', stopDefault);
-      addEventHandler(dropBoxElem, 'dragleave', stopDefault);
-      return addEventHandler(dropBoxElem, 'drop', drop);
+    var dropBoxElem, xhr;
+    if (window.File && window.FileList && window.FileReader) {
+      addEventHandler(document.getElementById("imgSelect"), "change", imgSelectHandler);
+      xhr = new XMLHttpRequest();
+      if (xhr.upload) {
+        dropBoxElem = document.getElementById("drop");
+        addEventHandler(dropBoxElem, 'dragover', stopDefault);
+        addEventHandler(dropBoxElem, 'dragleave', stopDefault);
+        addEventHandler(dropBoxElem, 'drop', imgSelectHandler);
+        return dropBoxElem.style.display = "block";
+      }
     } else {
       return $("#imageInfo").html("Your browser does not support drag and drop of images");
     }

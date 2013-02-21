@@ -21,7 +21,7 @@ docpadConfig = {
 			]
 
 			# The default title of our website
-			title: "Your Website"
+			title: "Snap Disco"
 
 			# The website description (for SEO)
 			description: """
@@ -34,14 +34,10 @@ docpadConfig = {
 				"""
 
 			# The website author's name
-			author: "Your Name"
+			author: "Alyssa"
 
 			# The website author's email
 			email: "your@email.com"
-
-			#links
-			links: ["/pages/hello"]
-
 
 		# -----------------------------
 		# Helper Functions
@@ -66,9 +62,6 @@ docpadConfig = {
 		getPreparedKeywords: ->
 			# Merge the document keywords with the site keywords
 			@site.keywords.concat(@document.keywords or []).join(', ')
-
-		getLinks: ->
-			@site.links
 
 	# =================================
 	# Collections

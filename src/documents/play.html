@@ -55,8 +55,10 @@ pageOrder: 4
 
   }
   function toDesktop(){
-    var canvas = document.getElementById("resultCanvas");
-    Canvas2Image.saveAsPNG(canvas);
+    if ($("#dropImg").length > 0) {
+      var canvas = document.getElementById("resultCanvas");
+      Canvas2Image.saveAsPNG(canvas);
+    }
   }
 
 </script>

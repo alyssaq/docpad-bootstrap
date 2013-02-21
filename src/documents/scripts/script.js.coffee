@@ -6,12 +6,13 @@
 App = App || Globals: {foreGcolour: $("#btnForeG").css('backgroundColor'), backGcolour: $("#btnBackG").css('backgroundColor')}
 
 #Events
-clearBtn = (resCtx) ->
-  $("#drop").empty().html("Or drop image here!")
-  $("#drop").width(300)
-  $("#drop").height(300)
+clearBtn = (srcCtx, resCtx) ->
   # remember the current line width
-  $("#imageInfo").html ''
+  srcCtx.save()
+  srcCtx.setTransform(1, 0, 0, 1, 0, 0)
+  srcCtx.clearRect(0, 0, resCtx.canvas.width, resCtx.canvas.height)
+  srcCtx.restore()
+
   # clear the content of the canvas 
   resCtx.save()
   # Use the identity matrix while clearing the canvas
@@ -88,7 +89,7 @@ initialize = (srcCanvas)->
       finishDrawings srcCtx, resCtx, position
 
   #Clear
-  $("#btnClear").click -> clearBtn(resCtx)
+  $("#btnClear").click -> clearBtn(srcCtx, resCtx)
 
   #Change the line colour depending on fore/background
   $("#btnForeG").click ->
@@ -125,11 +126,11 @@ loadCanvasAndImg = (id, img) ->
     canvas.style.cursor   = "crosshair"
     canvas.onselectstart  = () -> false # IE: disable text selection
     canvas.onmousedown    = () -> false # mozilla: disable text selection
-    canvas.ondragover     = (e) -> $id.addClass "hover"; false
-    canvas.ondragleave    = (e) -> $id.removeClass "hover"; false
+    canvas.ondragover     = () -> $id.addClass "hover"; false
     $id.append canvas
     initialize canvas
   $id.append img
+  $id.removeClass "hover";
 
 stopDefault = (e) ->
   e.stopPropagation()

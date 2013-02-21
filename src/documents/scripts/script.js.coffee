@@ -141,6 +141,7 @@ drop = (e) ->
     reader = new FileReader()
     reader.onload = (event) ->
       image       = new Image()
+      image.id    = "dropImg"
       image.src   = event.target.result
       image.onload = ((image) -> 
         (e) ->

@@ -151,6 +151,7 @@
       reader.onload = function(event) {
         var image;
         image = new Image();
+        image.id = "dropImg";
         image.src = event.target.result;
         return image.onload = (function(image) {
           return function(e) {

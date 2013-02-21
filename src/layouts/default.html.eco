@@ -63,16 +63,12 @@
       <hr>
 
 		<footer>
-			<p>&copy; Snap 2012</p>
+			<p>&copy; Snap 2013</p>
 			<p style="float:right;">
 				This website was last updated at <%= @site.date.toISOString() %>
 			</p>
 		</footer>
 
     </div> <!-- /container -->
-
-
-	<!-- Scripts -->
-	<%- @getBlock('scripts').add(["/vendor/jquery.js","/vendor/log.js","/vendor/modernizr.js","/scripts/script.js", "/scripts/canvas2image.js"]).toHTML() %>
 </body>
 </html>

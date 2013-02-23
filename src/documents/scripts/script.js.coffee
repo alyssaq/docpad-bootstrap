@@ -3,7 +3,12 @@
 # works out the X, Y position of the click INSIDE the canvas from the X, Y position on 
 # the page
 
-App = App || Globals: {foreGcolour: $("#btnForeG").css('backgroundColor'), backGcolour: $("#btnBackG").css('backgroundColor')}
+App = App || Globals: {
+    foreGcolour: $("#btnForeG").css('backgroundColor'), 
+    backGcolour: $("#btnBackG").css('backgroundColor'), 
+    eraseColor: $("#btnEraser").css('backgroundColor'),
+    dropHeight: $("#drop").height()
+  }
 
 #Events
 clearBtn = (srcCtx, resCtx) ->
@@ -95,12 +100,15 @@ initialize = (srcCanvas)->
   $("#btnForeG").click ->
     srcCtx.globalCompositeOperation = "source-over"
     srcCtx.strokeStyle = App.Globals.foreGcolour
+    $("#radiusBox").css "backgroundColor", App.Globals.foreGcolour
     resCtx.strokeStyle = "white"
   $("#btnBackG").click ->
     srcCtx.globalCompositeOperation = "source-over"
     srcCtx.strokeStyle = App.Globals.backGcolour
+    $("#radiusBox").css "backgroundColor", App.Globals.backGcolour
     resCtx.strokeStyle = "black"
   $("#btnEraser").click ->
+    $("#radiusBox").css "backgroundColor", App.Globals.eraseColor
     srcCtx.globalCompositeOperation = "destination-out"
     srcCtx.strokeStyle              = "rgba(0,0,0,1.0)"
     resCtx.strokeStyle              = "lightgrey"
@@ -113,8 +121,15 @@ initialize = (srcCanvas)->
 loadCanvasAndImg = (id, img) ->
   $id = $('#' + id)
   $id.empty()
-  $id.width  img.width
-  $id.height img.height
+  if img.width > $("#uploader").width()
+    $id.width img.width
+  else
+    $id.width $("#uploader").width()
+  if img.height > App.Globals.dropHeight
+    $id.height img.height
+  else 
+    $id.height App.Globals.dropHeight
+
   if Modernizr.canvas
     canvas                = document.createElement 'canvas'
     canvas.id             = "canvasArea"
@@ -130,7 +145,9 @@ loadCanvasAndImg = (id, img) ->
     $id.append canvas
     initialize canvas
   $id.append img
-  $id.removeClass "hover";
+  $id.removeClass "hover"
+  $("#drawingTools").css "opacity", 1
+  $("#btnDone").css "opacity", 1
 
 stopDefault = (e) ->
   e.stopPropagation()
@@ -139,17 +156,20 @@ stopDefault = (e) ->
 
 parseImg = (file) ->
   info   = 'Name: '+file.name+'<br/>Size: '+file.size+' bytes<br/>'
-  reader = new FileReader();
-  reader.onload = (e) ->
-    image       = new Image()
-    image.id    = "dropImg"
-    image.src   = e.target.result
-    image.onload = ((image) -> 
-      (e) ->
-        loadCanvasAndImg "drop", image
-        $("#imageInfo").html info
-    )(image)
-  reader.readAsDataURL file
+  if file.size > 5243000 #Limit image upload to 5MB
+    $("#drop").html("Sorry, the selected image is larger than 5MB. <br> Please select a smaller sized image.")
+  else
+    reader = new FileReader();
+    reader.onload = (e) ->
+      image       = new Image()
+      image.id    = "dropImg"
+      image.src   = e.target.result
+      image.onload = ((image) -> 
+        (e) ->
+          loadCanvasAndImg "drop", image
+          $("#imageInfo").html info
+      )(image)
+    reader.readAsDataURL file
 
 imgSelectHandler = (e) ->
   e = e || window.event; # get window.event if e argument missing (in IE)  
@@ -168,19 +188,19 @@ addEventHandler = (obj, evt, handler) ->
   else # Old school method
     obj['on' + evt] = handler
     
-#TODO: 21/02: Max uploadable image size is 10MB
 $(document).ready ->
+  $("#radiusBox").css "backgroundColor", App.Globals.foreGcolour
   if window.File && window.FileList && window.FileReader
     addEventHandler document.getElementById("imgSelect"), "change", imgSelectHandler
 
     xhr = new XMLHttpRequest()
-    if xhr.upload
+    if xhr.upload #for Opera
       # file drag-drop
       dropBoxElem = document.getElementById("drop")
       addEventHandler dropBoxElem, 'dragover' , stopDefault
       addEventHandler dropBoxElem, 'dragleave', stopDefault
       addEventHandler dropBoxElem, 'drop'     , imgSelectHandler
-      dropBoxElem.style.display = "block"
+      #dropBoxElem.style.display = "block"
       #submitbutton.style.display = "none";
   else
     $("#imageInfo").html "Your browser does not support drag and drop of images"

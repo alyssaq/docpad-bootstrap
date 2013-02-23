@@ -4,52 +4,66 @@ title: 'Play'
 tags: ['navmenu']
 pageOrder: 4
 ---
-<section id="wrapper">
+<article>
   <h1>Scribble demo</h1>
-  <aside id="message"></aside>
+  <aside id="message" class="lead">
+    (1) Please choose an image (max size of 5MB) <br>
+    (2) Select the <span class="foregound"> foreground </span> and <span class="background"> background </span> using the drawing tools <br>
+    (3) Once you are done, click on Done!
+  </aside>
 
-  <article>
-    <section class="block">
-      <h4>Drawing tools:</h4>
-      <p>
-        <button id="btnForeG" class="btn btn-info" type="button">Foreground</button>
-        <button id="btnBackG" class="btn btn-warning" type="button">Background</button>
-        <button id="btnEraser" class="btn btn-primary" type="button">Erase</button>
-        <button class="btn btn-inverse btn-small" type="button" id="btnClear">Clear</button>
-      </p>
-      <p>
-         <!--<button class="btn" onclick="toImage()">Trimap Snapshot</button>-->
-         <button class="btn" onclick="toDesktop()">Save to Desktop</button> 
-      </p>
-      <div>
-          Line width:
-          <input type="number" id="btnLinewidth" value="5"></input> pixels
-      </div>
-      
-    </section>
-    <section class="block">
+<section class="row-fluid">
 
-      <form id="imgUpload" action="upload.php" method="POST" enctype="multipart/form-data">
-      <fieldset form="imgUpload">
-      <legend>Please upload an image</legend>
-      <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
-      <div>
-        <label for="imgSelect"><button type="button" id="btn_myFileInput">Choose image...</button></label>
-        <input type="file" accept="image/*" id="imgSelect" name="imgSelect"/>
-        <div id="imageInfo"></div>
-        <div id="drop">Or drop image here!</div>
-        <canvas id="resultCanvas" width="400" height="400"></canvas>
-      </div>
+    <section class="span3">
+      <div id="drawingTools" style="background-color:white">
+        <h3>Drawing tools:</h3>
+        <p>
+          <button id="btnForeG" class="btnDraw btn btn-info" type="button">Foreground</button>
+          <button id="btnBackG" class="btnDraw btn btn-warning" type="button">Background</button>
+
+          <button id="btnEraser" class="btnDraw btn" type="button">Erase</button>
+          
+        </p>
         <!--
-        <button type="submit">Upload Files</button>
+        <p>
+           <button class="btn" onclick="toImage()">Trimap Snapshot</button>
+           <button class="btn" onclick="toDesktop()">Save to Desktop</button> 
+        </p>
         -->
-      </fieldset>
-      </form
-      
-    </section>
-  </article>
-</section>
+        
+        
+        Radius:
+        <div id="radiusBox" style="background-color:red;overflow:hidden;">
+          <div class="arrow-down"></div>
+          <div style="position:relative;left:50%;clear:left;float:left;">
+            <div style="padding-top:5px;">
+              
+              <input type="number" style="right:50%;position:relative"id="btnLinewidth" value="5"></input>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-inverse pull-right" type="button" id="btnClear">Clear</button>
 
+      </div>
+    </section>
+
+    <section class="span9">
+      <div id="uploader">
+        <label for="imgSelect" style="display:inline"><button class="btn" type="button" id="btnImgSelect">Choose image...</button></label>
+        <input type="file" accept="image/*" id="imgSelect" name="imgSelect"/>
+        <button type="submit" class="btn btn-large btn-success pull-right" id="btnDone">Done</button>
+        <div id="imageInfo"></div>
+      </div>
+      <form id="imgUpload" action="upload.php" method="POST" enctype="multipart/form-data">
+        <fieldset form="imgUpload">
+          <div id="drop">Or drop image here!</div>
+          <canvas id="resultCanvas" width="400" height="400"></canvas>
+        </fieldset>
+      </form>
+    </section>
+
+</section>
+</article>
 <script>
   function toImage(){
     var canvas    = document.getElementById("canvasArea");
